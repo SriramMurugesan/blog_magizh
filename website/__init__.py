@@ -7,8 +7,8 @@ def create_app():
     app=Flask(__name__)
     app.config['SECRET_KEY']="helloworld"
 
-    @app.route("/")
-    def home():
-        return "<h1>Hello</h1>"
+    from .views import views
+
+    app.register_blueprint(views,url_prefix="/")
 
     return app
