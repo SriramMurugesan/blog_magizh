@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template, redirect, url_for, request
+from flask import Blueprint, flash,render_template, redirect, url_for, request
 from . import db
 from .models import User
 from flask_login import login_user, logout_user, login_required, current_user
@@ -51,14 +51,14 @@ def sign_up():
         elif len(password1)<6:
             flash("Password must be at least 7 characters",category="error")
         else:
-            new_user= User(email=email,username=username,password=generate_password_hash(password1,method="sha256"))
+            new_user= User(email=email,username=username,password=generate_password_hash(password1,method="pbkdf2:sha256"))
             db.session.add(new_user)
             db.session.commit()
-            login_user(user, remember=True)
+            login_user(new_user, remember=True)
             flash("Account created",category="success")
             return redirect(url_for("views.home"))
 
-        return render_template("signup.html")
+    return render_template("signup.html")
 
 @auth.route("/logout")
 @login_required
