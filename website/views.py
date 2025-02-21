@@ -45,3 +45,14 @@ def delete_post(id):
         flash("Post deleted.", category="success")
 
     return redirect(url_for("views.home"))
+
+@views.route("/post/<username>")
+@login_required
+def post(username):
+    user= User.query.filter_by(username=username).first()
+    if not user:
+        flash("User does not exist.", category="error")
+        return redirect(url_for("views.home"))
+
+    posts= Post.query.filter_by(author=user.id).all()
+    return render_template("post.html",user=current_user,posts=posts,username=username)
