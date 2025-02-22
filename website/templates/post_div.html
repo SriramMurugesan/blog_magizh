@@ -18,17 +18,13 @@
         <div class="card-body">
             <div class="card-text">{{post.text}}</div>
             <br>
-            {% for comment in post.comments %}
-            {{comment.text}}
-            {%- endfor %} 
-            <br>
             <div class="collapse" id="comments-{{post.id}}">
-                <div class = "card">
+                <div class="card">
                     <div class="card-body" id="comments-expanded-{{post.id}}">
                         {% for comment in post.comments %}
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <a href="/post/{{comment.user.username}}">{{comment.user.username}}</a>:{{comment.text}}
+                                <a href="/post/{{comment.user.username}}">{{comment.user.username}}</a>: {{comment.text}}
                             </div>
                             <div>
                                 <small class="text-muted">{{comment.date.strftime('%Y-%m-%d %H:%M:%S')}}</small>
@@ -38,6 +34,15 @@
                     </div>
                 </div>
             </div>
+            <p class="card-text">
+            {% if post.comments|length > 0 %}
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" href="#comments-{{post.id}}" role="button">
+                View {{post.comments|length}} Comments
+            </button>
+            {% else %}
+            <small class="text-muted">No comments yet</small>
+            {%- endif %}
+            </p>
             <form class="input-group mb-3" method="POST" action="/create-comment/{{post.id}}">
                 <input type="text" id="text" name="text" class="form-control" placeholder="Comment something!">
                 <button class="btn btn-primary" type="submit">Comment</button> 
