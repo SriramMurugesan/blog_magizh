@@ -28,6 +28,15 @@
                             </div>
                             <div>
                                 <small class="text-muted">{{comment.date.strftime('%Y-%m-%d %H:%M:%S')}}</small>
+                                {% if user.id == comment.author or user.id == post.author %}
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/delete-comment/{{comment.id}}" class="dropdown-item">Delete</a></li>
+                                    </ul>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         {%- endfor %} 
