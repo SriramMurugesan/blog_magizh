@@ -5,15 +5,25 @@
     <div class="card border-dark">
         <div class="card-header d-flex justify-content-between align-items-center">
             <a href="/post/{{post.user.username}}">{{post.user.username}}</a>
-            {% if user.id == post.author %}
-            <div class="btn-group">
-                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="/delete-post/{{post.id}}" class="dropdown-item">Delete</a></li>
-                </ul>
+            <div class="d-flex align-items-center">
+                <a href="#" onclick="likePost({{post.id}}); return false;" class="me-3" id="like-button-{{post.id}}">
+                    {% if user.id in post.likes|map(attribute='author')|list %}
+                    <i class="fas fa-thumbs-up"></i>
+                    {% else %}
+                    <i class="far fa-thumbs-up"></i>
+                    {% endif %}
+                    <span id="like-count-{{post.id}}">{{ post.likes|length }}</span>
+                </a>
+                {% if user.id == post.author %}
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="/delete-post/{{post.id}}" class="dropdown-item">Delete</a></li>
+                    </ul>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
         <div class="card-body">
             <div class="card-text">{{post.text}}</div>
