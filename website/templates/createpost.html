@@ -3,11 +3,10 @@
 <h1 align="center">Create Post</h1>
 
 <form method="POST">
-    {{ form.csrf_token }}
-    {{ form.content(class="form-control") }}
+    <textarea name="content" id="text" class="form-control"></textarea>
     <br>
     <div align="center">
-        {{ form.submit(class="btn btn-lg btn-primary") }}
+        <button class="btn btn-lg btn-primary" type="submit">Post</button>
     </div>
 </form>
 <br>

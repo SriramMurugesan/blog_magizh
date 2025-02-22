@@ -2,11 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-from flask_wtf.csrf import CSRFProtect
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-csrf = CSRFProtect()
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
@@ -18,18 +16,16 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = "helloworld"
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-    app.config['WTF_CSRF_ENABLED'] = True
     
     db.init_app(app)
-    csrf.init_app(app)
     
     from .views import views
     from .auth import auth
 
-    app.register_blueprint(views,url_prefix="/")
-    app.register_blueprint(auth,url_prefix="/")
+    app.register_blueprint(views, url_prefix="/")
+    app.register_blueprint(auth, url_prefix="/")
 
-    from .models import User,Post,Comment
+    from .models import User, Post, Comment
 
     create_database(app)
 

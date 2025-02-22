@@ -1,31 +1,31 @@
-from flask import Blueprint,render_template,request,flash,redirect,url_for,jsonify
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 from .models import Post, User, Comment, Like
-from .forms import CreatePostForm
 from . import db 
 
 views = Blueprint("views", __name__) 
-
 
 @views.route("/")
 @views.route("/home")
 @login_required
 def home():
     posts = Post.query.join(User, Post.author == User.id).all()
-    return render_template("home.html",user=current_user,posts=posts)
+    return render_template("home.html", user=current_user, posts=posts)
 
-@views.route("/create-post",methods=["GET","POST"])
+@views.route("/create-post", methods=["GET", "POST"])
 @login_required
 def create_post():
-    form = CreatePostForm()
-    if form.validate_on_submit():
-        text = form.content.data.strip()
-        post = Post(text=text, author=current_user.id)
-        db.session.add(post)
-        db.session.commit()
-        flash("Post created", category="success")
-        return redirect(url_for("views.home"))
-    return render_template("createpost.html", user=current_user, form=form)
+    if request.method == "POST":
+        text = request.form.get("content")
+        if not text or text.strip() == "":
+            flash("Post cannot be empty", category="error")
+        else:
+            post = Post(text=text.strip(), author=current_user.id)
+            db.session.add(post)
+            db.session.commit()
+            flash("Post created", category="success")
+            return redirect(url_for("views.home"))
+    return render_template("createpost.html", user=current_user)
 
 @views.route("/delete-post/<id>")
 @login_required
@@ -92,17 +92,18 @@ def delete_comment(comment_id):
 @login_required
 def like(post_id):
     post = Post.query.filter_by(id=post_id).first()
-    like = Like.query.filter_by(author=current_user.id, post_id=post_id).first()
     
     if not post:
         return jsonify({'error': 'Post does not exist.'}), 400
+        
+    like = Like.query.filter_by(author=current_user.id, post_id=post_id).first()
     
     if like:
         db.session.delete(like)
         db.session.commit()
         return jsonify({'liked': False, 'likes': len(post.likes)})
-    else:
-        like = Like(author=current_user.id, post_id=post_id)
-        db.session.add(like)
-        db.session.commit()
-        return jsonify({'liked': True, 'likes': len(post.likes)})
+    
+    like = Like(author=current_user.id, post_id=post_id)
+    db.session.add(like)
+    db.session.commit()
+    return jsonify({'liked': True, 'likes': len(post.likes)})

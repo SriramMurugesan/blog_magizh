@@ -10,16 +10,10 @@ function likePost(postId) {
     fetch(`/like-post/${postId}`, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCsrfToken()
+            'Content-Type': 'application/json'
         }
     })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
         if (data.liked) {
             likeIcon.classList.replace('far', 'fas');
@@ -28,5 +22,8 @@ function likePost(postId) {
         }
         likeCount.innerHTML = data.likes;
     })
-    .catch(()=> alert("could not like the post"));
+    .catch(() => {
+        console.error('Error liking post');
+        alert("Could not like post");
+    });
 }
