@@ -1,6 +1,6 @@
 from flask import Blueprint,render_template,request,flash,redirect,url_for
 from flask_login import login_required, current_user
-from .models import Post
+from .models import Post, User
 from . import db 
 
 views = Blueprint("views", __name__) 
@@ -10,7 +10,7 @@ views = Blueprint("views", __name__)
 @views.route("/home")
 @login_required
 def home():
-    posts= Post.query.all()
+    posts = Post.query.join(User, Post.author == User.id).all()
     return render_template("home.html",user=current_user,posts=posts)
 
 @views.route("/create-post",methods=["GET","POST"])
@@ -49,10 +49,10 @@ def delete_post(id):
 @views.route("/post/<username>")
 @login_required
 def post(username):
-    user= User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first()
     if not user:
         flash("User does not exist.", category="error")
         return redirect(url_for("views.home"))
 
-    posts= Post.query.filter_by(author=user.id).all()
-    return render_template("post.html",user=current_user,posts=posts,username=username)
+    posts = user.posts
+    return render_template("post.html", user=current_user, posts=posts, username=username)

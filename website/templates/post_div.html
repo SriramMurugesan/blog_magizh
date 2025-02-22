@@ -4,10 +4,10 @@
     {% for post in posts %}
     <div class="card border-dark">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <a href="/posts/{{post.user.username}}">{{post.user.username}}</a>
+            <a href="/post/{{post.user.username}}">{{post.user.username}}</a>
             {% if user.id == post.author %}
             <div class="btn-group">
-                <button class="btn-btn-sm btn primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="/delete-post/{{post.id}}" class="dropdown-item">Delete</a></li>
@@ -23,8 +23,13 @@
     <br>
     {% endfor %} 
 </div>
+{% block footer %}
     <div align="center">
-        <a href="/create-post"><button type="button" class="btn btn-lg btn-primary">Create Post</button></a>
+        <a href="/create-post">
+            <button type="button" class="btn btn-primary btn-lg">
+                Create Post
+            </button></a>
     </div>
+{% endblock %}
 
 {% endblock %}
