@@ -36,9 +36,9 @@
             </div>
             <p class="card-text">
             {% if post.comments|length > 0 %}
-            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" href="#comments-{{post.id}}" role="button">
-                View {{post.comments|length}} Comments
-            </button>
+            <a data-bs-toggle="collapse" href="#comments-{{post.id}}" role="button">
+            <small>View {{post.comments|length}} Comments</small>
+            </a>
             {% else %}
             <small class="text-muted">No comments yet</small>
             {%- endif %}
